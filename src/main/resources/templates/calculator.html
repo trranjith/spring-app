@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Simple Calculator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <script>
+        function calculate(operation) {
+            let num1 = document.getElementById("num1").value;
+            let num2 = document.getElementById("num2").value;
+            let resultDiv = document.getElementById("result");
+
+            // Validate input
+            if (num1 === "" || num2 === "") {
+                resultDiv.innerHTML = "<span class='text-danger'>Please enter both numbers.</span>";
+                return;
+            }
+
+            let url = `/calculator/${operation}?a=${num1}&b=${num2}`;
+
+            fetch(url)
+                .then(response => response.text())
+                .then(result => {
+                    resultDiv.innerHTML = `<span class="fw-bold">Result: ${result}</span>`;
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    resultDiv.innerHTML = "<span class='text-danger'>Error occurred. Try again.</span>";
+                });
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .calculator-container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-calc {
+            width: 48%;
+        }
+    </style>
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100">
+
+    <div class="calculator-container text-center">
+        <h2 class="mb-3">Simple Calculator</h2>
+
+        <div class="mb-3">
+            <input type="number" id="num1" class="form-control" placeholder="Enter first number">
+        </div>
+        <div class="mb-3">
+            <input type="number" id="num2" class="form-control" placeholder="Enter second number">
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-primary btn-calc" onclick="calculate('add')">+</button>
+            <button class="btn btn-secondary btn-calc" onclick="calculate('subtract')">−</button>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+            <button class="btn btn-success btn-calc" onclick="calculate('multiply')">×</button>
+            <button class="btn btn-danger btn-calc" onclick="calculate('divide')">÷</button>
+        </div>
+
+        <h3 id="result" class="mt-4 text-info">Result: </h3>
+    </div>
+
+</body>
+</html>
